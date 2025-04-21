@@ -18,7 +18,7 @@ The rds file is broken down into 5 pieces
 
 #### 2.1.2 Reassemble in Python
 Which is reassembled in python for analysis
-![Figure 2: Combine in Python](py_in.jpg)
+![Figure 2: Combine in Python](py_in.png)
 
 ### 2.2 Analyzing the Data
 
@@ -29,13 +29,13 @@ After all the processes are done, the data is analysed by having the number of c
 ### 3.1 Insufficient Memory on Local Machine
 
 Problem: Running RunAzimuth() on the local laptop resulted in out-of-memory errors due to the large size of the bone marrow dataset and only 16 GB of RAM available.
-![Figure 3: Combine in Python](py_in.jpg)
+![Figure 3: Combine in Python](py_in.png)
 Solution: Switched to the BigRed200 HPC cluster, providing sufficient memory to successfully complete the Azimuth run.
 
 ### 3.2 Persistent HDF5 Conversion Error
 
 Problem: After obtaining the annotated Seurat object, every attempt to convert it back to .h5ad with Convert() failed with the following HDF5 API error:
-![Figure 4: Error Exporting h5ad Directly](err.jpg)
+![Figure 4: Error Exporting h5ad Directly](err.png)
 
 #### Attempts to Diagnose:
 
@@ -65,7 +65,7 @@ The manual reassembly bypassed the faulty HDF5 copy step and produced a valid .h
 The final annotated h5ad contains 20 distinct cell types. The most abundant populations were GMP (approximately 1065 cells), LMPP (1138), and HSC (1028), while rare populations such as MAIT and Stromal were each represented by a single cell.
 
 
-![Figure 5: Distribution of Cells per Cell Type](Distribution.jpg)
+![Figure 5: Distribution of Cells per Cell Type](Distribution.png)
 
 
 • Initial Azimuth mapping succeeded on HPC after local memory limits.
