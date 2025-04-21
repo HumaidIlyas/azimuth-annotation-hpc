@@ -1,6 +1,6 @@
 # Assessment - Azimuth Mapping of Human CD34 $+$  Bone Marrow
 
-Humaid Ilyas
+## Humaid Ilyas
 
 Monday 21 $st$  April, 2025
 
@@ -18,59 +18,55 @@ After Azimuth is done running, the rds object which we are calling bm is convert
 
 #### 1.1.1 Export from Seurat
 
-bm $<-$  readRDS("bm_azimuth_results.rds")
+bm &lt;- readRDS("bm_azimuth_results.rds")
 
-2 counts_mat $<-$  GetAssayData(bm, assay $m^{11}$ RNA", $\text {slot="counts")}$ 
+counts_mat $<-$  GetAssayData(bm, assay="RNA", $\text {slot="counts")}$ 
 
-3 norm_mat $<-$  GetAssayData(bm, assay $"="$ RNA", $\text {slot="data")}$ 
+norm_mat $<-$  GetAssayData(bm, $\text {assay="RNA"}$ , $\text {slot="data")}$ 
 
-4 writeMM(counts_mat, "counts.mtx")
+writeMM(counts_mat, "counts.mtx")
 
-5 writeMM(norm_mat,"data.mtx")
+writeMM(norm_mat,"data.mtx")
 
-6 write.table(rownames(norm_mat), "genes.tsv", $\text {quote=FALSE}$ , $row.names=FALSE$ , col.names $=$ FALSE)
+write.table(rownames(norm_mat), "genes.tsv", $\text {quote=FALSE}$ , $row.names=FALSE,$  col.names $=$ FALSE)
 
-7 write.table(colnames(norm_mat), "barcodes.tsv", $\text {quote=FALSE}$ , $row.names=FALSE$ , col.names $=$ FALSE)
+write.table(colnames(norm_mat), "barcodes.tsv" $,quote=FALSE$ , $row.names=FALSE,$  col.names=FALSE)
 
-8 write.csv(bm@meta.data, "meta.csv", quote=FALSE)
+write.csv(bm@meta.data, "meta.csv", quot $e=FALSE)$ 
 
 #### 1.1.2 Reassemble in Python
 
 from scipy import io
 
-2 import pandas as pd
+import pandas as pd
 
-3 import anndata as ad
+import anndata as ad
 
-4
+counts $=$  io.mmread("counts.mtx").T.tocsr()
 
-5 counts $=$  io.mmread("counts.mtx").T.tocsr()
+norm $=$ io.mmread("data.mtx").T.tocsr()
 
-6 norm $=$ io.mmread("data.mtx").T.tocsr()
+genes $=pd.read_csv("genes.tsv",$  header $=$ None)[0].astype(str)
 
-genes $=pd.read_csv("genes.tsv"$ ,header=None)[0].astype(str)
-
-8 barcodes $=$  pd.read_csv("barcodes.tsv", header=None)[0].astype(str)
+barcodes $=$  pd.read_csv("barcodes.tsv", header=None)[0].astype(str)
 
 meta $=pd.read_csv("meta.csv"$ , index_col $=0$ )
 
-10
+adata $=$  ad.AnnData(
 
-11 adata $=$  ad.AnnData(
+$\mathrm {X}=\text {norm,}$ 
 
-12 X=norm,
+$obs=meta,$ 
 
-13 obs=meta,
+$\text {var=pd.}$ DataFrame(index $=$ genes)
 
-14 var=pd.DataFrame(index=genes)
+)
 
-15 )
+adata.raw $=$  ad.AnnData $(\mathrm {X}=\text {counts}$ , $\text {var=adata.var}$ , obs=adata.obs)
 
-16 adata.raw $-$  ad.AnnData( $X=$ counts, $\text {var=adata.var}$ , obs $=$ adata.obs)
+adata.layers["counts"] $=$  counts
 
-17 adata.layers["counts $"]=counts$ 
-
-18 adata.write("annotated_expr_manual.h5ad")
+adata.write("annotated_expr_manual.h5ad")
 
 ### 1.2 Anlyzing the Data
 
@@ -98,7 +94,7 @@ error #000: H5O.c in H5Ocopy(): ... Unable to copy object
 
 error #005: Source object not found
 
-Calls: Convert ... Convert.H5Seurat $->$  H5SeuratToH5AD -&gt; &lt;Anonymous&gt; -&gt; .Call
+Calls: Convert ... Convert.H5Seurat -&gt; H5SeuratToH5AD -&gt; &lt;Anonymous&gt; -&gt; .Call
 
 #### Attempts to Diagnose:
 
@@ -126,44 +122,38 @@ None of these approaches removed the HDF5 copy error.
 
 • Metadata: meta.csv
 
-##### 2. Reconstruct the annotated AnnData object entirely in Python:
+2. Reconstruct the annotated AnnData object entirely in Python:
 
-1 import scipy.io as io
+import scipy.io as io
 
-2 import pandas as pd
+import pandas as pd
 
-3 import anndata as ad
+import anndata as ad
 
-4
+counts $=$  io.mmread("counts.mtx").T.tocsr()
 
-5 counts $-$  io.mmread("counts.mtx").T.tocsr()
+norm $.$ 
 
-6 norm $=$  io.mmread("data.mtx").T.tocsr()
+genes $=$  pd.read_csv("genes.tsv", header $=$ None)[0].astype(str)
 
-genes $=$  pd.read_csv("genes.tsv", header=None)[0].astype(str)
+barcodes $=$  pd.read_csv("barcodes.tsv", header $=$ None)[0].astype(str)
 
-barcodes $=$ pd.read_csv("barcodes.tsv", header=None)[0].astype(str)
+meta $=$  pd.read_csv("meta.csv", index_col $=0$ )
 
-9 meta $-$  pd.read_csv("meta.csv", index_col $=0$ )
+adata $=$  ad.AnnData $(\mathrm {X}=\text {norm},$  laye $s=\{"$ counts": counts}, obs $=$ meta, $\text {var=pd.}$ DataFrame(index $=$ genes))adata.write("annotated_expr_manual.h5ad")
 
-10
+\end{minted}
 
-11 adata $=$  ad.AnnData( $\mathrm {X}=$ norm, layers $。$ {"counts": counts}, obs=meta,
-
-,→ var=pd.DataFrame(index=genes))
-
-12 adata.write("annotated_expr_manual.h5ad")
-
-3. This manual reassembly bypassed the faulty HDF5 copy step and produced a valid .h5ad for down stream analysis.
+\item This manual reassembly bypassed the faulty HDF5 copy step and produced a valid \texttt{.h5ad
 
 ## 3. Results
 
-The fnal annotated expr manual.h5ad contains 20 distinct cell types. The most abundant populations were GMP (approximately 1065 cells), LMPP (1138), and HSC (1028), while rare populations such as MAIT and Stromal were each represented by a single cell.
+The fnal annotated expr manual.h5ad contains 20 distinct cell types. The most abundant popula tions were GMP (approximately 1065 cells), LMPP (1138), and HSC (1028), while rare populations such as MAIT and Stromal were each represented by a single cell.
 
 
-![](distribution.jpg)
+![Figure 1: Distribution of Cells per Cell Type](distribution.jpg)
 
-Figure 1: Distribution of Cells per Cell Type
+
 
 • Initial Azimuth mapping succeeded on HPC after local memory limits.
 
