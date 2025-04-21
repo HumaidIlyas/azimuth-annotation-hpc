@@ -14,7 +14,7 @@ After Azimuth is done running, the rds object, which we are calling our rds file
 
 #### 2.1.1 Export from Seurat
 The rds file is broken down into 5 pieces 
-![Figure 1: Export from R](r_out.jpg)
+![Figure 1: Export from R](r_out.png)
 
 #### 2.1.2 Reassemble in Python
 Which is reassembled in python for analysis
