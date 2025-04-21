@@ -151,7 +151,7 @@ adata $=$  ad.AnnData $(\mathrm {X}=\text {norm},$  laye $s=\{"$ counts": counts
 The fnal annotated expr manual.h5ad contains 20 distinct cell types. The most abundant popula tions were GMP (approximately 1065 cells), LMPP (1138), and HSC (1028), while rare populations such as MAIT and Stromal were each represented by a single cell.
 
 
-![Figure 1: Distribution of Cells per Cell Type](distribution.jpg)
+![Figure 1: Distribution of Cells per Cell Type](Distribution.jpg)
 
 
 
